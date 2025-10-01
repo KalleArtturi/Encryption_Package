@@ -12,11 +12,7 @@
       <SourcesRoot>src</SourcesRoot>
       
       <Resource Name="PasswordSecurity.PKG"/>
-      
-      <Dependencies>
-        <!-- Add any dependencies here if needed -->
-      </Dependencies>
-      
+
       <Lifecycle>
         <Phase>Compile</Phase>
       </Lifecycle>
