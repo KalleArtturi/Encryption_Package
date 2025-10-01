@@ -1,4 +1,4 @@
-Class src.PasswordSecurity.HashValidator
+Class src.SecKit.HashValidator
 {
 
 /// Compares two strings agains each other in a time-constant manner and returns boolean

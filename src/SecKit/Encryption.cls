@@ -1,4 +1,4 @@
-Class src.PaswordSecurity.Encryption
+Class src.SecKit.Encryption
 {
 /// Encypts a any given string
 ClassMethod EncryptString(plain as %String, keyid as %Stirng) as %String
