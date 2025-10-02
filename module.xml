@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-  <Document name="password-security-toolkit.ZPM">
+  <Document name="encryption-package.ZPM">
     <Module>
-      <Name>password-security-toolkit</Name>
+      <Name>encryption-package</Name>
       <Version>1.0.0</Version>
-      <Description>Password hash validation and AES encryption utilities for InterSystems IRIS</Description>
-      <Keywords>password,security,encryption,hash,aes,authentication</Keywords>
-      <Author>Kalle Alkula</Author>
-      <License>MIT</License>
+      <Description>Encryption utilities package with AES encryption and hash validation</Description>
+      <Keywords>encryption,aes,hash,security,validation</Keywords>
       <Packaging>module</Packaging>
+      
       <SourcesRoot>src</SourcesRoot>
       
-      <Resource Name="PasswordSecurity.PKG"/>
-
-      <Lifecycle>
-        <Phase>Compile</Phase>
-      </Lifecycle>
+      <Resource Name="SecKit.Encryption.cls">
+        <Directory>src/SecKit</Directory>
+        <Filename>Encryption.cls</Filename>
+      </Resource>
+      
+      <Resource Name="SecKit.HashValidator.cls">
+        <Directory>src/SecKit</Directory>
+        <Filename>HashValidator.cls</Filename>
+      </Resource>
+      
     </Module>
   </Document>
 </Export>
