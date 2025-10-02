@@ -3,7 +3,8 @@ Class src.SecKit.Encryption
 /// Encypts a any given string
 ClassMethod EncryptString(plain as %String, keyid as %Stirng) as %String
 {
-    Quit $SYSTEM.Encryption.AESCBCManagedKeyEncrypt(plain, keyid)
+    Set encrypted = $SYSTEM.Encryption.AESCBCManagedKeyEncrypt(plain, keyid)
+    return encrypted
 }
 
 
@@ -11,7 +12,7 @@ ClassMethod EncryptString(plain as %String, keyid as %Stirng) as %String
 ClassMethod DecryptString(encrypted as %String, keyid as %String) as %String
 {
      Try {
-        Quit $SYSTEM.Encryption.AESCBCManagedKeyDecrypt(encrypted, keyid)
+        set plain = $SYSTEM.Encryption.AESCBCManagedKeyDecrypt(encrypted, keyid)
     } Catch ex {
         // In case of any error, return empty string
         Quit ""
