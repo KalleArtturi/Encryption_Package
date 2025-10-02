@@ -13,6 +13,7 @@ ClassMethod DecryptString(encrypted as %String, keyid as %String) as %String
 {
      Try {
         set plain = $SYSTEM.Encryption.AESCBCManagedKeyDecrypt(encrypted, keyid)
+        return plain
     } Catch ex {
         // In case of any error, return empty string
         Quit ""
