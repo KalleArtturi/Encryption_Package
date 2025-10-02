@@ -1,7 +1,7 @@
-Class src.SecKit.Encryption
+Class SecKit.Encryption
 {
 /// Encypts a any given string
-ClassMethod EncryptString(plain as %String, keyid as %Stirng) as %String
+ClassMethod EncryptString(plain as %String, keyid as %String) as %String
 {
     Set encrypted = $SYSTEM.Encryption.AESCBCManagedKeyEncrypt(plain, keyid)
     return encrypted
