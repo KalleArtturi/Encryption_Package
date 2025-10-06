@@ -7,6 +7,17 @@
       <Description>Encryption utilities package with AES encryption and hash validation</Description>
       <Keywords>encryption,aes,hash,security,validation</Keywords>
       <Packaging>module</Packaging>
+
+      <Author>
+        <Person>
+          <Name>Kalle Alkula</Name>
+          <Email>kalle.alkula.ka@gmail.com</Email>
+        </Person>
+      </Author>
+
+      <Repository>
+        <Url>https://github.com/KalleArtturi/Encryption_Package</Url>
+      </Repository>
       
       <SourcesRoot>src</SourcesRoot>
       
