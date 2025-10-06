@@ -1,22 +1,27 @@
 Class SecKit.Encryption
 {
 /// Encypts a any given string
-ClassMethod EncryptString(plain as %String, keyid as %String) as %String
+ClassMethod EncryptString(plain as %String, keyid as %String, ByRef output as %string) as %Status
 {
-    Set encrypted = $SYSTEM.Encryption.AESCBCManagedKeyEncrypt(plain, keyid)
-    return encrypted
+    try {
+        Set output = $SYSTEM.Encryption.AESCBCManagedKeyEncrypt(plain, keyid)
+        return $$$OK
+    } catch ex {
+        set output = ""
+        return $$$ERROR($$GeneralError, ex.DisplayString())
+    }
 }
 
 
 /// Decrypts a any given string
-ClassMethod DecryptString(encrypted as %String, keyid as %String) as %String
+ClassMethod DecryptString(encrypted as %String, keyid as %String, ByRef output as %string) as %Status
 {
-     Try {
-        set plain = $SYSTEM.Encryption.AESCBCManagedKeyDecrypt(encrypted, keyid)
-        return plain
-    } Catch ex {
-        // In case of any error, return empty string
-        Quit ""
+    try {
+        Set output = $SYSTEM.Encryption.AESCBCManagedKeyDecrypt(encrypted, keyid)
+        return $$$OK
+    } catch ex {
+        set output = ""
+        return $$$ERROR($$$GeneralError, "Decryption failed: " _ ex.DisplayString())
     }
 }
 }
