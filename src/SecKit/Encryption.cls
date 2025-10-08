@@ -8,7 +8,7 @@ ClassMethod EncryptString(plain as %String, keyid as %String, ByRef output as %S
         return $$$OK
     } catch ex {
         set output = ""
-        return $$$ERROR($$GeneralError, ex.DisplayString())
+        return $$$ERROR($$$GeneralError, ex.DisplayString())
     }
 }
 
