@@ -1,4 +1,4 @@
-/// Unit tests for SecKit.HashValidator class
+/// Unit tests for HashValidator class
 Class SecKit.HashValidatorTest Extends %UnitTest.TestCase
 {
 

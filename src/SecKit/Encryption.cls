@@ -1,7 +1,7 @@
 Class SecKit.Encryption
 {
 /// Encypts a any given string
-ClassMethod EncryptString(plain as %String, keyid as %String, ByRef output as %string) as %Status
+ClassMethod EncryptString(plain as %String, keyid as %String, ByRef output as %String) as %Status
 {
     try {
         Set output = $SYSTEM.Encryption.AESCBCManagedKeyEncrypt(plain, keyid)
@@ -14,7 +14,7 @@ ClassMethod EncryptString(plain as %String, keyid as %String, ByRef output as %s
 
 
 /// Decrypts a any given string
-ClassMethod DecryptString(encrypted as %String, keyid as %String, ByRef output as %string) as %Status
+ClassMethod DecryptString(encrypted as %String, keyid as %String, ByRef output as %String) as %Status
 {
     try {
         Set output = $SYSTEM.Encryption.AESCBCManagedKeyDecrypt(encrypted, keyid)
