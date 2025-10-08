@@ -1,0 +1,7 @@
+{
+    "objectscript.conn": {
+        "server": "qs",
+        "ns": "ROUTING",
+        "active": true
+    }
+}
