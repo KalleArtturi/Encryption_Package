@@ -5,11 +5,11 @@ Class SecKit.HashValidator
 ClassMethod CompareHash(a As %String, b As %String) As %Boolean
 {
     If ($L(a) '= $L(b)) Quit 0
-    Set result = 0
+    Set result = 1  // Start with 1 (true)
     For i=1:1:$L(a) {
-        Set result = result || ($A(a, i) '= $A(b, i))
+        Set result = result & ($A(a, i) = $A(b, i))  // Use & for bitwise AND
     }
-    Quit 'result
+    Quit result
 }
 
 }
