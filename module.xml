@@ -7,29 +7,33 @@
       <Description>Encryption utilities package with AES encryption and hash validation</Description>
       <Keywords>encryption,aes,hash,security,validation</Keywords>
       <Packaging>module</Packaging>
-
       <Author>
         <Person>
           <Name>Kalle Alkula</Name>
           <Email>kalle.alkula.ka@gmail.com</Email>
         </Person>
       </Author>
-
       <Repository>
         <Url>https://github.com/KalleArtturi/Encryption_Package</Url>
       </Repository>
-      
       <SourcesRoot>src</SourcesRoot>
-      
       <Resource Name="SecKit.Encryption.cls">
         <Directory>src/SecKit</Directory>
         <Filename>Encryption.cls</Filename>
       </Resource>
-      
       <Resource Name="SecKit.HashValidator.cls">
         <Directory>src/SecKit</Directory>
         <Filename>HashValidator.cls</Filename>
       </Resource>
+      <Resource Name="SecKit.Test.EncryptionTest.cls">
+        <Directory>src/SecKit/Test</Directory>
+        <Filename>EncryptionTest.cls</Filename>
+      </Resource>
+      <Resource Name="SecKit.Test.HashValidatorTest.cls">
+        <Directory>src/SecKit/Test</Directory>
+        <Filename>HashValidatorTest.cls</Filename>
+      </Resource>
+      <UnitTest Name="src/SecKit/Test" Package="SecKit.Test" Phase="test" />
       
     </Module>
   </Document>
