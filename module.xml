@@ -6,22 +6,11 @@
       <Version>0.1.0</Version>
       <Description>Encryption utilities package with AES encryption and hash validation</Description>
       <Keywords>encryption,aes,hash,security,validation</Keywords>
-      <Author>
-        <Organization>KalleArtturi</Organization>
-        <CopyrightDate>2025</CopyrightDate>
-      </Author>
-      <Dependencies>
-        <ModuleReference>
-          <Name>%UnitTest</Name>
-          <Version>*</Version>
-        </ModuleReference>
-      </Dependencies>
-      <FileCopy Name="src" Target="${mgrdir}${namespace}/"/>
+      <Packaging>module</Packaging>
       <Resource Name="SecKit.PKG"/>
       <Resource Name="SecKit.Test.PKG"/>
       <UnitTest Name="src/SecKit/Test/" Package="SecKit.Test" Phase="test"/>
-      <Parameter Name="TEST" Value="1"/>
-      <LifecycleClass>%ZPM.PackageManager.Developer.Lifecycle.Module</LifecycleClass>
+      <LifecycleClass>%IPM.Lifecycle.Module</LifecycleClass>
       <SourcesRoot>src</SourcesRoot>
     </Module>
   </Document>
