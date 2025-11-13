@@ -67,8 +67,6 @@ Method TestEncryptDecryptRoundTrip()
     For i=1:1:$ListLength(testCases) {
         Set originalText = $List(testCases, i)
 
-        Set ..KeyId = %System.Encryption.CreateEncryptionKey("TestKey3","AES","256","","")
-
         Set sc = ##class(SecKit.Encryption).EncryptString(originalText, ..KeyId, .encrypted)
         Do $$$AssertStatusOK(sc, "Encryption failed for: " _ originalText)
 
@@ -76,8 +74,6 @@ Method TestEncryptDecryptRoundTrip()
         Do $$$AssertStatusOK(sc, "Decryption failed for: " _ originalText)
 
         Do $$$AssertEquals(decrypted, originalText, "Round-trip failed for: " _ originalText)
-
-        Do %System.Encryption.DeactivateEncryptionKey(..KeyId,.sc)
     }
 }
 
@@ -85,7 +81,6 @@ Method TestEncryptDecryptRoundTrip()
 Method TestEncryptEmptyString()
 {
     Set plainText = ""
-    Set ..KeyId = %System.Encryption.CreateEncryptionKey("TestKey4","AES","256","","")
     Set sc = ##class(SecKit.Encryption).EncryptString(plainText, ..KeyId, .output)
 
     Do $$$AssertStatusOK(sc, "Encryption of empty string should succeed")
@@ -94,8 +89,6 @@ Method TestEncryptEmptyString()
     Set sc = ##class(SecKit.Encryption).DecryptString(output, ..KeyId, .decrypted)
     Do $$$AssertStatusOK(sc, "Decryption should succeed")
     Do $$$AssertEquals(decrypted, plainText, "Empty string should decrypt correctly")
-
-    Do %System.Encryption.DeactivateEncryptionKey(..KeyId,.sc)
 }
 
 /// Test decryption with invalid encrypted string
@@ -113,16 +106,13 @@ Method TestDecryptWithWrongKey()
 {
     Set wrongKey = "NONEXISTENT_KEY_ID"
     Set plainText = "Secret Message"
-    Set ..KeyId = %System.Encryption.CreateEncryptionKey("TestKey5","AES","256","","")
 
     Set sc = ##class(SecKit.Encryption).EncryptString(plainText, ..KeyId, .encrypted)
     Do $$$AssertStatusOK(sc, "Encryption should succeed")
 
     Set sc = ##class(SecKit.Encryption).DecryptString(encrypted, wrongKey, .output)
-    Do $$$AssertStatusNotOK(sc, "Decryption with wrong Key should fail")
+    Do $$$AssertNotOK(sc, "Decryption with wrong Key should fail")
     Do $$$AssertEquals(output, "", "Output should be empty on failure")
-
-    Do %System.Encryption.DeactivateEncryptionKey(..KeyId,.sc)
 }
 
 /// Test encryption with invalid Key
@@ -143,8 +133,6 @@ Method TestEncryptLongString()
         Set longText = longText _ "Lorem ipsum dolor sit amet, consectetur adipiscing elit. and what ever it is after that. "
     }
 
-    Set ..KeyId = %System.Encryption.CreateEncryptionKey("TestKey6","AES","256","","")
-
     Set sc = ##class(SecKit.Encryption).EncryptString(longText, ..KeyId, .encrypted)
     Do $$$AssertStatusOK(sc, "Encryption of long string should succeed")
     Do $$$AssertTrue($Length(encrypted) > 0, "Encrypted long string should not be empty")
@@ -152,14 +140,11 @@ Method TestEncryptLongString()
     Set sc = ##class(SecKit.Encryption).DecryptString(encrypted, ..KeyId, .decrypted)
     Do $$$AssertStatusOK(sc, "Decryption should succeed")
     Do $$$AssertEquals(decrypted, longText, "Long string should decrypt correctly")
-
-    Do %System.Encryption.DeactivateEncryptionKey(..KeyId,.sc)
 }
 
 /// Test encryption with special characters and unicode
 Method TestEncryptSpecialCharacters()
 {
-    Set ..KeyId = %System.Encryption.CreateEncryptionKey("TestKey7","AES","256","","")
     Set specialText = "!@#$%^&*()_+-=[]{}|;':"",./<>?`~" _ $Char(9) _ $Char(10) _ $Char(13)
 
     Set sc = ##class(SecKit.Encryption).EncryptString(specialText, ..KeyId, .encrypted)
@@ -168,28 +153,20 @@ Method TestEncryptSpecialCharacters()
     Set sc = ##class(SecKit.Encryption).DecryptString(encrypted, ..KeyId, .decrypted)
     Do $$$AssertStatusOK(sc, "Decryption should succeed")
     Do $$$AssertEquals(decrypted, specialText, "Special characters should be preserved")
-
-    Do %System.Encryption.DeactivateEncryptionKey(..KeyId,.sc)
 }
 
 /// Test decryption with empty encrypted string
 Method TestDecryptEmptyString()
 {
-    Set ..KeyId = %System.Encryption.CreateEncryptionKey("TestKey8","AES","256","","")
-
     Set sc = ##class(SecKit.Encryption).DecryptString("", ..KeyId, .output)
     Do $$$AssertStatusNotOK(sc, "Decryption of empty string should fail")
     Do $$$AssertEquals(output, "", "Output should be empty")
-
-    Do %System.Encryption.DeactivateEncryptionKey(..KeyId,.sc)
 }
 
 /// Test encryption with numeric strings
 Method TestEncryptNumericStrings()
 {
     Set testNumbers = $ListBuild("123", "0", "999999999", "-456", "3.14159")
-
-    Set ..KeyId = %System.Encryption.CreateEncryptionKey("TestKey9","AES","256","","")
 
     For i=1:1:$ListLength(testNumbers) {
         Set numStr = $List(testNumbers, i)
@@ -200,29 +177,22 @@ Method TestEncryptNumericStrings()
         Set sc = ##class(SecKit.Encryption).DecryptString(encrypted, ..KeyId, .decrypted)
         Do $$$AssertStatusOK(sc, "Decryption failed for: " _ numStr)
         Do $$$AssertEquals(decrypted, numStr, "Numeric string failed: " _ numStr)
-
-
     }
-    Do %System.Encryption.DeactivateEncryptionKey(..KeyId,.sc)
 }
 
 /// Test that output parameter is properly set on error
 Method TestOutputParameterOnError()
 {
     Set output = "INITIAL_VALUE"
-    Set ..KeyId = %System.Encryption.CreateEncryptionKey("TestKey10","AES","256","","")
     Set sc = ##class(SecKit.Encryption).EncryptString("test", "INVALID_KEY", .output)
 
     Do $$$AssertStatusNotOK(sc, "Should fail with invalid Key")
     Do $$$AssertEquals(output, "", "Output should be empty string on error")
-
-    Do %System.Encryption.DeactivateEncryptionKey(..KeyId,.sc)
 }
 
 /// Test status error messages contain useful information
 Method TestErrorMessageContent()
 {
-    Set ..KeyId = %System.Encryption.CreateEncryptionKey("TestKey11","AES","256","","")
     Set sc = ##class(SecKit.Encryption).DecryptString("invalid", ..KeyId, .output)
 
     Do $$$AssertStatusNotOK(sc, "Should return error status")
@@ -231,8 +201,6 @@ Method TestErrorMessageContent()
     Set errorMsg = $System.Status.GetErrorText(sc)
     Do $$$AssertTrue($Length(errorMsg) > 0, "Error message should not be empty")
     Do $$$LogMessage("Error message: " _ errorMsg)
-
-    Do %System.Encryption.DeactivateEncryptionKey(..KeyId,.sc)
 }
 
 }
