@@ -7,11 +7,11 @@
       <Description>Encryption utilities package with AES encryption and hash validation</Description>
       <Keywords>encryption,aes,hash,security,validation</Keywords>
       <Packaging>module</Packaging>
-      <Resource Name="SecKit.Encryption.CLS"/>
-      <Resource Name="SecKit.HashValidator.CLS"/>
-      <UnitTest Name="/src/SecKit/EncryptionTestUnits" Package="SecKit" Phase="test"/>
-      <LifecycleClass>%IPM.Lifecycle.Module</LifecycleClass>
       <SourcesRoot>src</SourcesRoot>
+      <Resource Name="SecKit.PKG" Directory="SecKit"/>
+      <Resource Name="UnitTest.SecKit.PKG" Directory="tests/UnitTest/SecKit" Scope="test"/>
+      <UnitTest Package="UnitTest.SecKit" Phase="test"/>
+      <LifecycleClass>%IPM.Lifecycle.Module</LifecycleClass>
     </Module>
   </Document>
 </Export>

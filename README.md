@@ -27,8 +27,12 @@ Below are common ways to install or import this package into an InterSystems IRI
 2) Deploy from source control / CI
 	- Copy the `src/SecKit` files into your server's source tree and compile them as part of your deployment pipeline.
 
-3) ZPM (module manifest included)
-	- The repository contains `module.xml` describing package metadata. Publish or install with ZPM if you add packaging to a registry.
+3) ZPM (recommended)
+	- The repository contains `module.xml` describing package metadata. Install using:
+	```
+	zpm:NAMESPACE>load /path/to/Encryption_Package
+	zpm:NAMESPACE>test encryption_package
+	```
 
 ## Configuration — Managed Key
 
@@ -74,19 +78,23 @@ If equal Write "Match", ! Else Write "No match", !
 
 ## Running unit tests
 
-The repository includes unit tests under `src/SecKit/*Test.cls`. The encryption tests require you to supply a valid managed key ID.
+The repository includes unit tests under `tests/UnitTest/SecKit/`. The encryption tests automatically create and manage test encryption keys.
 
-1. Edit `src/SecKit/EncryptionTest.cls`
-	 - Update the `OnBeforeAllTests()` method to set `..KeyId` to your managed key ID (replace the placeholder).
+1. Run tests using ZPM
+	 - After loading the package, run:
+	 ```
+	 zpm:NAMESPACE>test encryption_package
+	 ```
 
 2. Run tests from Management Portal
-	 - Use the Test Runner to execute `SecKit.EncryptionTest` and `SecKit.HashValidatorTest`.
+	 - Use the Test Runner to execute `UnitTest.SecKit.EncryptionTest` and `UnitTest.SecKit.HashValidatorTest`.
 
 3. Run tests from a terminal session
 	 - Example (replace `<instance>` and `<namespace>`):
 
 ```bash
-iris session <instance> -U <namespace> "%UnitTest.TestRunner.RunTestClass('SecKit.EncryptionTest')"
+iris session <instance> -U <namespace> "%UnitTest.TestRunner.RunTestClass('UnitTest.SecKit.EncryptionTest')"
+iris session <instance> -U <namespace> "%UnitTest.TestRunner.RunTestClass('UnitTest.SecKit.HashValidatorTest')"
 ```
 
 Notes
@@ -102,9 +110,10 @@ Notes
 ## Files of interest
 
 - `src/SecKit/Encryption.cls` — AES managed-key encrypt/decrypt wrappers
-- `src/SecKit/EncryptionTest.cls` — tests (update KeyId before running)
 - `src/SecKit/HashValidator.cls` — time-constant string compare
-- `src/SecKit/HashValidatorTest.cls` — unit tests for the comparator
+- `tests/UnitTest/SecKit/EncryptionTest.cls` — unit tests for encryption
+- `tests/UnitTest/SecKit/HashValidatorTest.cls` — unit tests for the comparator
+- `module.xml` — ZPM package manifest
 
 ---
 
