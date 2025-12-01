@@ -117,7 +117,7 @@ Notes
 
 ---
 
-If you'd like, I can now add a small `Makefile` or shell script to compile the classes and run the tests, or create a GitHub Actions workflow example. Tell me which and I'll add it.
+
 
 
 

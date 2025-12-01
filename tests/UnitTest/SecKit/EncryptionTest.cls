@@ -111,7 +111,7 @@ Method TestDecryptWithWrongKey()
     Do $$$AssertStatusOK(sc, "Encryption should succeed")
 
     Set sc = ##class(SecKit.Encryption).DecryptString(encrypted, wrongKey, .output)
-    Do $$$AssertNotOK(sc, "Decryption with wrong Key should fail")
+    Do $$$AssertStatusNotOK(sc, "Decryption with wrong Key should fail")
     Do $$$AssertEquals(output, "", "Output should be empty on failure")
 }
 

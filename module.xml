@@ -7,9 +7,8 @@
       <Description>Encryption utilities package with AES encryption and hash validation</Description>
       <Keywords>encryption,aes,hash,security,validation</Keywords>
       <Packaging>module</Packaging>
-      <SourcesRoot>src</SourcesRoot>
-      <Resource Name="SecKit.PKG" Directory="SecKit"/>
-      <Resource Name="UnitTest.SecKit.PKG" Directory="tests/UnitTest/SecKit" Scope="test"/>
+      <Resource Name="SecKit.PKG" Directory="src"/>
+      <Resource Name="UnitTest.SecKit.PKG" Directory="tests" Scope="test"/>
       <UnitTest Package="UnitTest.SecKit" Phase="test"/>
       <LifecycleClass>%IPM.Lifecycle.Module</LifecycleClass>
     </Module>
