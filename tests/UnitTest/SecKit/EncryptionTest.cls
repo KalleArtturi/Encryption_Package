@@ -5,22 +5,78 @@ Class UnitTest.SecKit.EncryptionTest Extends %UnitTest.TestCase
 /// Setup method - runs before all tests
 Method OnBeforeAllTests() As %Status
 {
-    // Create a test Key for all tests to use
-    Set ..KeyId = %System.Encryption.CreateEncryptionKey("UnitTestKey","AES","256","","")
-    If ..KeyId = "" {
-        Write !, "WARNING: Could not create test encryption Key!", !
-        Write !, "Tests may fail without a valid Key.", !
-        Quit $$$ERROR($$$GeneralError, "Failed to create test Key")
-    }
+    Try {
+        // Save current namespace
+        Set currentNS = $Namespace
 
-    Quit $$$OK
+        // Create encryption key using $SYSTEM.Encryption.CreateEncryptionKey
+        Set keyFile = "UnitTestKey"
+        Set username = "TestAdmin"
+        Set password = "TestPassword123"
+        Set keyLength = 32  // 32 bytes = 256 bits for AES-256
+
+        // Switch to %SYS namespace (required for key creation)
+        ZN "%SYS"
+
+        // Try to create the key
+        Set keyId = $SYSTEM.Encryption.CreateEncryptionKey(keyFile, username, password, keyLength, .sc)
+
+        // If key was created, activate it (must stay in %SYS namespace)
+        If keyId '= "" {
+            Write !, "Successfully created encryption key: ", keyId, !
+
+            // Activate the key for use (in %SYS namespace)
+            Do $SYSTEM.Encryption.ActivateEncryptionKey(keyId, .activateSC)
+            If $$$ISERR(activateSC) {
+                Write !, "Warning: Key activation failed: ", $System.Status.GetErrorText(activateSC), !
+            } Else {
+                Write !, "Key activated successfully!", !
+            }
+        } Else {
+            // Key creation failed, try to use existing key
+            Write !, "Key creation failed, attempting to use existing key: ", keyFile, !
+            Set keyId = keyFile
+
+            // Try to activate the existing key (in %SYS namespace)
+            Do $SYSTEM.Encryption.ActivateEncryptionKey(keyId, .activateSC)
+            If $$$ISOK(activateSC) {
+                Write !, "Existing key activated successfully!", !
+            } Else {
+                Write !, "Warning: Could not activate existing key", !
+            }
+        }
+
+        // Switch back to original namespace AFTER activation
+        ZN currentNS
+
+        Set ..KeyId = keyId
+
+        // Verify the key works by attempting encryption
+        Try {
+            Set testResult = $SYSTEM.Encryption.AESCBCManagedKeyEncrypt("test", ..KeyId)
+            If testResult = "" {
+                Return $$$ERROR($$$GeneralError, "Key verification failed - encryption returned empty")
+            }
+            Write !, "Key verification successful!", !
+        } Catch verifyEx {
+            Return $$$ERROR($$$GeneralError, "Key verification failed: " _ verifyEx.DisplayString())
+        }
+
+        Return $$$OK
+    } Catch ex {
+        // Make sure we're back in the correct namespace
+        Try { ZN currentNS } Catch {}
+        Return $$$ERROR($$$GeneralError, "Setup error: " _ ex.DisplayString())
+    }
 }
 
 /// Cleanup method - runs after all tests
 Method OnAfterAllTests() As %Status
 {
+    // Note: Leaving encryption key activated
+    // Deactivation requires %SYS namespace and is not critical for tests
     If ..KeyId '= "" {
-        Do %System.Encryption.DeactivateEncryptionKey(..KeyId, .sc)
+        Write !, "Test key '", ..KeyId, "' remains activated", !
         Set ..KeyId = ""
     }
     Quit $$$OK
@@ -125,6 +181,7 @@ Method TestEncryptWithInvalidKey()
     Do $$$AssertStatusNotOK(sc, "Encryption with invalid key should fail")
     Do $$$AssertEquals(encrypted, "", "Output should be empty when using invalid key")
 }
+
 /// Test encryption with very long string
 Method TestEncryptLongString()
 {
@@ -145,7 +202,7 @@ Method TestEncryptLongString()
 /// Test encryption with special characters and unicode
 Method TestEncryptSpecialCharacters()
 {
-    Set specialText = "!@#$%^&*()_+-=[]{}|;':"",./<>?`~" _ $Char(9) _ $Char(10) _ $Char(13)
+    Set specialText = "!@#$%^&*()_+-=[]{}|;':" _ $Char(34) _ ",./<>?`~" _ $Char(9) _ $Char(10) _ $Char(13)
 
     Set sc = ##class(SecKit.Encryption).EncryptString(specialText, ..KeyId, .encrypted)
     Do $$$AssertStatusOK(sc, "Encryption should succeed")
@@ -170,7 +227,7 @@ Method TestEncryptNumericStrings()
 
     For i=1:1:$ListLength(testNumbers) {
         Set numStr = $List(testNumbers, i)
-
+ 
         Set sc = ##class(SecKit.Encryption).EncryptString(numStr, ..KeyId, .encrypted)
         Do $$$AssertStatusOK(sc, "Encryption failed for: " _ numStr)
 
@@ -204,5 +261,3 @@ Method TestErrorMessageContent()
 }
 
 }
-
-
